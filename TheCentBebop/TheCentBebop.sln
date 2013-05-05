@@ -1,0 +1,30 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TheCentBebop", "TheCentBebop\TheCentBebop.vcxproj", "{82CE5C93-4083-4C54-9D63-660D5E7A0D6C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeferredRendering", "..\IS\DeferredRendering\DeferredRendering\DeferredRendering.vcxproj", "{FD0B9D4B-85D3-45BD-9B30-B60AFA4B55CE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{82CE5C93-4083-4C54-9D63-660D5E7A0D6C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{82CE5C93-4083-4C54-9D63-660D5E7A0D6C}.Debug|Win32.Build.0 = Debug|Win32
+		{82CE5C93-4083-4C54-9D63-660D5E7A0D6C}.Debug|Win32.Deploy.0 = Debug|Win32
+		{82CE5C93-4083-4C54-9D63-660D5E7A0D6C}.Release|Win32.ActiveCfg = Release|Win32
+		{82CE5C93-4083-4C54-9D63-660D5E7A0D6C}.Release|Win32.Build.0 = Release|Win32
+		{82CE5C93-4083-4C54-9D63-660D5E7A0D6C}.Release|Win32.Deploy.0 = Release|Win32
+		{FD0B9D4B-85D3-45BD-9B30-B60AFA4B55CE}.Debug|Win32.ActiveCfg = Debug|Win32
+		{FD0B9D4B-85D3-45BD-9B30-B60AFA4B55CE}.Debug|Win32.Build.0 = Debug|Win32
+		{FD0B9D4B-85D3-45BD-9B30-B60AFA4B55CE}.Debug|Win32.Deploy.0 = Debug|Win32
+		{FD0B9D4B-85D3-45BD-9B30-B60AFA4B55CE}.Release|Win32.ActiveCfg = Release|Win32
+		{FD0B9D4B-85D3-45BD-9B30-B60AFA4B55CE}.Release|Win32.Build.0 = Release|Win32
+		{FD0B9D4B-85D3-45BD-9B30-B60AFA4B55CE}.Release|Win32.Deploy.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
