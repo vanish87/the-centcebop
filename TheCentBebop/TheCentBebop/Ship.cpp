@@ -2,8 +2,9 @@
 using namespace MocapGE;
 
 Ship::Ship(MocapGE::D3DModel* model)
-	:model_(model), acceleration_(0.1), speed_(0), hp_(100), phi_(0), theta_(0), pos_(float3(0.0f, 0.0f, 0.0f)), up_(float3(0, 1, 0))
-	,MAX_SPEED(1), TURNING_DEGREE(0.01)
+	:model_(model), acceleration_(0.1), speed_(0), hp_(100), phi_(0), theta_(0), turning_degree_(0), 
+	pos_(float3(0.0f, 0.0f, 0.0f)), up_(float3(0, 1, 0)),
+	MAX_SPEED(1), TURNING_DEGREE(0.01), MAX_TRUNING_DEGREE(30)
 {
 }
 
@@ -23,28 +24,36 @@ MocapGE::float3 Ship::GetDir()
 
 void Ship::Update()
 {
+	if(turning_degree_ != 0.0f)
+	{
+		if(turning_degree_ > 0)turning_degree_-=0.5;
+		else turning_degree_+=0.5;
+	}
 	//update ship and cannons that attached to it
 	float3 ship_dir = GetDir();
 	pos_ = pos_ + ship_dir * speed_;
-	float4x4 ship_mat, yrotation_mat, xrotation_mat, translate_mat;
+	float4x4 ship_mat, xrotation_mat, yrotation_mat, zrotation_mat, translate_mat;
 
 
 	float4x4 scale_mat;
-	Math::Scale(scale_mat, 0.3);
+	Math::Scale(scale_mat, 10);
 	Math::Identity(ship_mat);
 	Math::Identity(yrotation_mat);
-	Math::Identity(xrotation_mat);
+	Math::Identity(zrotation_mat);
 	Math::Identity(translate_mat);
+	Math::XRotation(xrotation_mat, turning_degree_ * Math::PI/180.f);
 	Math::YRotation(yrotation_mat, -theta_);
-	Math::ZRotation(xrotation_mat, phi_);
+	Math::ZRotation(zrotation_mat, phi_);
+
 	Math::Translate(translate_mat, pos_.x(), pos_.y(), pos_.z());
 
-	ship_mat =  scale_mat*xrotation_mat * yrotation_mat  * translate_mat;
-	model_->SetModelMatrix(ship_mat);
+	ship_mat =  xrotation_mat * zrotation_mat * yrotation_mat  * translate_mat;
 	for(size_t i =0; i< cannons_.size(); i++)
 	{
 		cannons_[i]->Update(ship_mat);
 	}
+
+	model_->SetModelMatrix(scale_mat * ship_mat);
 }
 
 void Ship::Accelerating()
@@ -64,11 +73,13 @@ void Ship::Deccelerating()
 void Ship::TurnLeft()
 {
 	theta_ += TURNING_DEGREE;
+	turning_degree_ = Math::Clamp(++turning_degree_, 0.0f, MAX_TRUNING_DEGREE);
 }
 
 void Ship::TurnRight()
 {
 	theta_ -= TURNING_DEGREE;
+	turning_degree_ = Math::Clamp(--turning_degree_, -MAX_TRUNING_DEGREE, 0.0f);
 }
 
 void Ship::HeadUp()
@@ -87,11 +98,11 @@ void Ship::Stabling( bool dir )
 {
 	if(dir)
 	{
-		if(phi_ > 0.0f) phi_-=TURNING_DEGREE* 0.01;
+		if(phi_ > 0.0f) phi_-=TURNING_DEGREE* 0.1;
 	}
 	else
 	{
-		if(phi_ < 0.0f) phi_ += TURNING_DEGREE* 0.01;
+		if(phi_ < 0.0f) phi_ += TURNING_DEGREE* 0.1;
 	}
 }
 

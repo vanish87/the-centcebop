@@ -4,9 +4,8 @@
 // <summary>Spaceship</summary>
 #pragma once
 
-#include "PreDec.h"
-#include "D3DModel.h"
-#include "Math.h"
+#include "DeferredRendering\PreDec.h"
+#include "DeferredRendering\D3DModel.h"
 
 #include "Cannon.h"
 
@@ -43,10 +42,12 @@ private:
 	int hp_;
 	float phi_;//UD 
 	float theta_;//LR theta =0 => towards +X-Axis
+	float turning_degree_;
 	MocapGE::float3 pos_;
 	MocapGE::float3 up_;
 
 	const float MAX_SPEED;
 	const float TURNING_DEGREE;
+	const float MAX_TRUNING_DEGREE;
 };
 

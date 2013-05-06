@@ -23,7 +23,7 @@ void Cannon::Update(float4x4 parent )
 	Math::XRotation(xrot_mat, phi);
 	Math::Translate(cannon_mat, pos_.x(), pos_.y(), pos_.z());
 
-	cannon_mat = cannon_mat * parent;
+	cannon_mat = local_rot_ * cannon_mat * parent;
 	model_->SetModelMatrix(cannon_mat);
 	bullet_->SetModelMatrix(cannon_mat);
 }
@@ -37,3 +37,10 @@ void Cannon::SetPos(float3 pos )
 {
 	pos_ = pos;
 }
+
+void Cannon::SetRotation( float3 axis, float angle )
+{
+	float4x4 tran_mat;
+	Math::RotationAxis(local_rot_, axis, angle);
+}
+

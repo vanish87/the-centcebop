@@ -5,8 +5,8 @@
 #pragma once
 
 #include <vector>
-#include "PreDec.h"
-#include "D3DModel.h"
+#include "DeferredRendering\PreDec.h"
+#include "DeferredRendering\D3DModel.h"
 
 class Picking
 {

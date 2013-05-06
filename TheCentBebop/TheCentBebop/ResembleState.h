@@ -4,11 +4,10 @@
 // <summary>Assembling Mode</summary>
 #pragma once
 
-#include "PreDec.h"
-#include "GameState.h"
-#include "Vector.h"
+#include "DeferredRendering\PreDec.h"
+#include "DeferredRendering\GameState.h"
 
-#include "D3DModel.h"
+#include "DeferredRendering\D3DModel.h"
 
 class Ship;
 class Cannon;

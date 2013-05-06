@@ -6,6 +6,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DeferredRendering", "..\IS\DeferredRendering\DeferredRendering\DeferredRendering.vcxproj", "{FD0B9D4B-85D3-45BD-9B30-B60AFA4B55CE}"
 EndProject
 Global
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = True
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
 		Release|Win32 = Release|Win32

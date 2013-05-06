@@ -29,17 +29,17 @@ ResembleState::~ResembleState(void)
 
 void ResembleState::Update()
 {
-	float3 cam_tag_pos = ship_pos_ - ship_dir_ + ship_up_ * 3;
+	float3 cam_tag_pos = ship_pos_ - ship_dir_ + ship_up_ * 30;
 	Camera* camera = Context::Instance().AppInstance().GetCamera();
 	float3 cam_pos = camera->GetPos();
 	float3 cam_up = camera->GetUp();
 
 	float3 dis = cam_tag_pos - cam_pos;
-	if(first_flag_ && Math::Dot(dis, dis) > 0.001 )
+	if(first_flag_ && Math::Dot(dis, dis) > 0.01 )
 	{
 		//set camera from third person view to default assembling position
 		dis = Math::Normalize(dis);
-		camera->SetView(cam_pos + dis* 0.01, ship_pos_, cam_up);
+		camera->SetView(cam_pos + dis* 0.5, ship_pos_, cam_up);
 	}
 	else
 	{
@@ -94,6 +94,7 @@ void ResembleState::OnMouseDown( WPARAM mouse_para, int x, int y )
 		picked_ = picking_[i]->GetIntersection(parts_[i]->GetModel(), viewport, screen_pos, picked_pos);
 		if(picked_)
 		{
+			PRINT("picked");
 			picked_model_ = parts_[i]->GetModel();
 			picked_index_= i;
 			break;
@@ -183,15 +184,15 @@ void ResembleState::OnMouseMove( WPARAM mouse_para, int x, int y )
 				real_up = Math::Normalize(real_up);
 				float3 down = float3(-real_up.x(), -real_up.y(), -real_up.z());
 				if(delta.x() > 0)
-					cannon_pos_ = cannon_pos_ + right / 50;
+					cannon_pos_ = cannon_pos_ + right / 5;
 				else
 					if(delta.x() < 0)
-						cannon_pos_ = cannon_pos_ + left / 50;
+						cannon_pos_ = cannon_pos_ + left / 5;
 				if(delta.y() > 0 )
-					cannon_pos_ = cannon_pos_ + down/ 50;
+					cannon_pos_ = cannon_pos_ + down/ 5;
 				else
 					if(delta.y() < 0 )
-						cannon_pos_ = cannon_pos_ + real_up/ 50;
+						cannon_pos_ = cannon_pos_ + real_up/ 5;
 
 				//make cannon move on the plane that parallel to the view plane
 				cannon_pos_ = cannon_pos_ + float3(delta.x()/320, delta.y()/200, 0) ;
@@ -206,7 +207,6 @@ void ResembleState::OnMouseMove( WPARAM mouse_para, int x, int y )
 					//if YES, get the accurate point of ship and attach cannon on the surface of ship
 					if(ship_pick_->GetIntersection(ship_->GetModel(), viewport ,screen_pos, picked_pos, picked_normal))
 					{
-						cannon->SetPos(picked_pos - ship_pos_);
 						Attach(ship_, cannon, picked_pos, picked_normal);
 					}
 				}
@@ -224,11 +224,16 @@ void ResembleState::Attach( Ship* ship_, Cannon* picked_cannon ,float3 picked_po
 	float3 cannon_up = float3(0,1,0);
 	float3 axis = Math::Cross(picked_normal, cannon_up);
 	float theta = Math::ArcCos(Math::Dot(picked_normal, cannon_up));
+
+	float3 ship_pos = ship_->GetPos();
+	picked_cannon->SetPos(picked_pos - ship_pos);
 	//get the rotation matrix so that we can make a fine attachment.
 	Math::RotationAxis(rot_matrix, axis, theta);
 	Math::Translate(world_matrix, picked_pos.x(), picked_pos.y(), picked_pos.z());
 	D3DModel* cannon_model = picked_cannon->GetModel();
 	cannon_model->SetModelMatrix(rot_matrix * world_matrix);
+
+	picked_cannon->SetRotation(axis, theta);
 
 	ship_->AddCannon(picked_cannon);
 

@@ -4,11 +4,11 @@
 // <summary>Main game loop, player can drive his spaceship</summary>
 #pragma once
 
-#include "PreDec.h"
-#include "GameState.h"
+#include "DeferredRendering\PreDec.h"
+#include "DeferredRendering\GameState.h"
 
-#include "D3DModel.h"
-#include "D3DSkyDome.h"
+#include "DeferredRendering\D3DModel.h"
+#include "DeferredRendering\D3DSkyDome.h"
 
 #include "Picking.h"
 #include "Ship.h"
@@ -55,6 +55,12 @@ private:
 	bool spacekey_down_, wkey_down_, skey_down_;
 
 	MocapGE::Timer* timer_;
+
+	bool first_person_;
+	MocapGE::float3 cam_pos_;
+	MocapGE::float3 cam_look_;
+	float pitch_angle_;
+	float speed_;
 
 	float angle_;
 

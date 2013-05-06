@@ -15,6 +15,10 @@
     <Keyword>Win32Proj</Keyword>
     <RootNamespace>test</RootNamespace>
     <ProjectName>TheCentBebop</ProjectName>
+    <SccProjectName>Svn</SccProjectName>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccProvider>SubversionScc</SccProvider>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -97,6 +101,11 @@
     <ClCompile Include="Picking.cpp" />
     <ClCompile Include="ResembleState.cpp" />
     <ClCompile Include="Ship.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\IS\DeferredRendering\DeferredRendering\DeferredRendering.vcxproj">
+      <Project>{fd0b9d4b-85d3-45bd-9b30-b60afa4b55ce}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

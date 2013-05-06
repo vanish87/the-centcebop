@@ -7,6 +7,8 @@
 #include "DeferredRendering\App.h"
 #include "DeferredRendering\PreDec.h"
 #include "DeferredRendering\D3DSkyDome.h"
+#include "GamingState.h"
+#include "ResembleState.h"
 
 class MyApp : public MocapGE:: App
 {
@@ -26,6 +28,8 @@ public:
 
 
 private:
+	typedef std::vector<Cannon*> PartList;
+
 	MocapGE::PointLight* point_light_;
 	MocapGE::SpotLight* spot_light_;
 
@@ -36,12 +40,12 @@ private:
 	//shy dome for universe background
 	MocapGE::D3DSkyDome* sky_;
 
-	bool first_person_;
-	MocapGE::float3 cam_pos_;
-	MocapGE::float3 cam_look_;
 
-	float pitch_angle_;
-	float speed_;
+
+
+
+	GamingState* gaming_;
+	ResembleState* resembling_;
 };
 
 #endif
