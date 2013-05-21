@@ -31,7 +31,13 @@ public:
 	void Stabling(bool dir);
 	MocapGE::D3DModel* GetModel();
 
+	void Fire();
+
 	void AddCannon(Cannon* cannon);
+
+	void LeftCannon();
+	void RightCannon();
+	void SetCannonDir(MocapGE::int2 screen_pos);
 private:
 
 	MocapGE::D3DModel* model_;

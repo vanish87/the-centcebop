@@ -5,6 +5,15 @@
 using namespace MocapGE;
 GamingState::GamingState(void)
 {
+
+	spot_light_ = new SpotLight();
+	spot_light_->SetPos(float3(50, 200, 0));
+	spot_light_->SetDir(float3(0,0,0) - float3(50, 200, 0));
+	spot_light_->SetInnerAngle(Math::PI / 12);
+	spot_light_->SetOuterAngle(Math::PI / 9);
+	spot_light_->AddToScene();
+
+
 	ship_model = new D3DModel();
 	ship_model->LoadFile("../Media/spacecraft_new.dae");
 	ship_model->LoadShaderFile("FxFiles/DeferredLighting.cso");
@@ -38,16 +47,34 @@ GamingState::GamingState(void)
 	scene_cannon1_ = new SceneObject(cannon_1);
 	scene_cannon1_->AddToScene();
 
+	bullet_1 = new D3DModel();
+	bullet_1->LoadFile("../Media/bullet.dae");
+	bullet_1->LoadShaderFile("FxFiles/DeferredLighting.cso");
+	Math::Scale(sacle_mat, 1);
+	Math::Translate(trans_mat, 0, 0, 0);
+	bullet_1->SetModelMatrix(sacle_mat * trans_mat);
+	scene_bullet1_ = new SceneObject(bullet_1);
+	scene_bullet1_->AddToScene();
+
 	cannon_2 = new D3DModel();
 	cannon_2->LoadFile("../Media/gun2.dae");
 	cannon_2->LoadShaderFile("FxFiles/DeferredLighting.cso");
 	scene_cannon2_ = new SceneObject(cannon_2);
     scene_cannon2_->AddToScene();
 
+	bullet_2 = new D3DModel();
+	bullet_2->LoadFile("../Media/bullet.dae");
+	bullet_2->LoadShaderFile("FxFiles/DeferredLighting.cso");
+	Math::Scale(sacle_mat, 1);
+	Math::Translate(trans_mat, 0, 0, 0);
+	bullet_2->SetModelMatrix(sacle_mat * trans_mat);
+	scene_bullet2_ = new SceneObject(bullet_2);
+	scene_bullet2_->AddToScene();
 
-	Cannon* cannon1 = new Cannon(cannon_1, cannon_1);
+
+	Cannon* cannon1 = new Cannon(cannon_1, scene_bullet1_);
 	resemble_parts_.push_back(cannon1);
-	Cannon* cannon2 = new Cannon(cannon_2, cannon_2);
+	Cannon* cannon2 = new Cannon(cannon_2, scene_bullet2_);
 	resemble_parts_.push_back(cannon2);
 
 	sky_= new D3DSkyDome("../Media/universe.dds");
@@ -108,24 +135,24 @@ GamingState::~GamingState(void)
 
 void GamingState::Update()
 {
-	if(first_person_)
-	{
-		Camera* camera = Context::Instance().AppInstance().GetCamera();
-		camera->SetView(cam_pos_, cam_look_, float3(0,1,0));
-
-		float4x4 mat,trans, rotate;
-		Math::Scale(mat, 30);
-		Math::Translate(trans,0,10,0);
-		Math::YRotation(rotate,Math::PI/2 *Math::Cos(timer_->Time()/1000.0f));
-		//ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
-
-		float4x4 trans_mat,sacle_mat;
-		//	float3 pos = static_cast<SpotLight*>(Context::Instance().GetSceneManager().GetLights()[1])->GetPos();
-		Math::Translate(trans_mat, 0 ,Math::Cos(timer_->Time()/10000.0f)*10, 0);
-		Math::Scale(sacle_mat, 1);
-		cannon_2->SetModelMatrix(sacle_mat * trans_mat);
-	}
-	else
+// 	if(first_person_)
+// 	{
+// 		Camera* camera = Context::Instance().AppInstance().GetCamera();
+// 		camera->SetView(cam_pos_, cam_look_, float3(0,1,0));
+// 
+// 		float4x4 mat,trans, rotate;
+// 		Math::Scale(mat, 30);
+// 		Math::Translate(trans,0,10,0);
+// 		Math::YRotation(rotate,Math::PI/2 *Math::Cos(timer_->Time()/1000.0f));
+// 		//ship_->GetRenderElement()->SetModelMatrix(rotate * trans * mat);
+// 
+// 		float4x4 trans_mat,sacle_mat;
+// 		//	float3 pos = static_cast<SpotLight*>(Context::Instance().GetSceneManager().GetLights()[1])->GetPos();
+// 		Math::Translate(trans_mat, 0 ,Math::Cos(timer_->Time()/10000.0f)*10, 0);
+// 		Math::Scale(sacle_mat, 1);
+// 		cannon_2->SetModelMatrix(sacle_mat * trans_mat);
+// 	}
+// 	else
 	{
 		//make spaceship return to even position
 		if(!spacekey_down_)
@@ -150,6 +177,9 @@ void GamingState::Update()
 		float3 cam_at = ship_pos + ship_dir * 20;
 		camera->SetView(cam_pos, cam_at, ship_up);
 
+		float3 light_cam = ship_pos + float3(0,0,1)* 35  + float3(0,1,0) *35;
+		spot_light_->SetPos(light_cam);
+		spot_light_->SetDir(ship_pos - light_cam);
 
 
 	}
@@ -311,6 +341,22 @@ void GamingState::OnKeyDown( WPARAM key_para )
 				break;
 			}
 
+		case 'Z':
+			{
+				ship_->LeftCannon();
+				break;
+			}
+		case 'X':
+			{
+				ship_->RightCannon();
+				break;
+			}
+		case 'C':
+			{
+				ship_->Fire();
+				break;
+			}
+
 		case VK_SPACE:
 			{
 				spacekey_down_ = true;
@@ -356,7 +402,8 @@ void GamingState::OnMouseUp( WPARAM mouse_para, int x, int y )
 
 void GamingState::OnMouseMove( WPARAM mouse_para, int x, int y )
 {
-
+	int2 screen_pos(x,y);
+	ship_->SetCannonDir(screen_pos);
 }
 
 std::vector<Cannon*> GamingState::GetParts()

@@ -15,31 +15,30 @@ MyApp::~MyApp(void)
 
 void MyApp::InitObjects()
 {
+	point_light_ = new PointLight();
+	point_light_->SetPos(float3(0,100, 0));	
+	point_light_->SetRange(500);
+	point_light_->AddToScene();
 	//set up lights
-	for(int i = -30; i < 0 ; ++i)
-	{
-		point_light_ = new PointLight();
-		point_light_->SetPos(float3(50 + i*30 ,10, -20));	
-		point_light_->SetColor(float4((200 + i)/255.0f, (100 - i)/255.0f, (100 + i)/255.0f, 1.0f));
-		point_light_->SetRange(50);
-		point_light_->AddToScene();
-	}
+// 	for(int i = -30; i < 0 ; ++i)
+// 	{
+// 		point_light_ = new PointLight();
+// 		point_light_->SetPos(float3(50 + i*30 ,10, -20));	
+// 		point_light_->SetColor(float4((200 + i)/255.0f, (100 - i)/255.0f, (100 + i)/255.0f, 1.0f));
+// 		point_light_->SetRange(50);
+// 		point_light_->AddToScene();
+// 	}
+// 
+// 	for(int i = -30; i < 0 ; ++i)
+// 	{
+// 		point_light_ = new PointLight();
+// 		point_light_->SetPos(float3(50 + i*30 ,10, 80));	
+// 		point_light_->SetColor(float4((200 + i)/255.0f, (100 - i)/255.0f, (100 + i)/255.0f, 1.0f));
+// 		point_light_->SetRange(50);
+// 		point_light_->AddToScene();
+// 	}
 
-	for(int i = -30; i < 0 ; ++i)
-	{
-		point_light_ = new PointLight();
-		point_light_->SetPos(float3(50 + i*30 ,10, 80));	
-		point_light_->SetColor(float4((200 + i)/255.0f, (100 - i)/255.0f, (100 + i)/255.0f, 1.0f));
-		point_light_->SetRange(50);
-		point_light_->AddToScene();
-	}
 
-	spot_light_ = new SpotLight();
-	spot_light_->SetPos(float3(50, 200, 0));
-	spot_light_->SetDir(float3(0,0,0) - float3(50, 200, 0));
-	spot_light_->SetInnerAngle(Math::PI / 6);
-	spot_light_->SetOuterAngle(Math::PI / 4);
-	spot_light_->AddToScene();
 
 	float4x4 mat,trans;
 	D3DModel *model = new D3DModel();
@@ -96,7 +95,7 @@ void MyApp::OnKeyDown( WPARAM key_para )
 			{
 				if(Context::Instance().GetStateManager().CurrentState() == gaming_)
 				{
-					std::cout<<"Assemble"<<std::endl;
+					//std::cout<<"Assemble"<<std::endl;
 					PartList parts = gaming_->GetParts();
 					if(resembling_ == nullptr)
 						resembling_ = new ResembleState(gaming_->GetShip(), parts);
@@ -107,7 +106,7 @@ void MyApp::OnKeyDown( WPARAM key_para )
 
 				if(Context::Instance().GetStateManager().CurrentState() == resembling_)
 				{
-					std::cout<<"Gaming"<<std::endl;
+					//std::cout<<"Gaming"<<std::endl;
 					Context::Instance().GetStateManager().ChangeState(resembling_, SOP_POP);
 					break;
 				}

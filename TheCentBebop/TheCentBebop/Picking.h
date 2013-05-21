@@ -14,7 +14,8 @@ public:
 	Picking(void);
 	~Picking(void);
 
-	//make all points in camera space
+	//make all points in model space
+	//return in model space
 	//return true if model is picked, with intersected_point and intersected_normal of this point, return false otherwise
 	bool GetIntersection( MocapGE::D3DModel* model, MocapGE::Viewport* viewport, MocapGE::float2 screen_point,
 							MocapGE::float3& intersected_point, MocapGE::float3& intersected_normal = MocapGE::float3(0,0,0));

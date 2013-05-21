@@ -36,8 +36,8 @@ public:
 	Ship* GetShip(){ return ship_;};
 	std::vector<Cannon*> GetParts();
 private:
-	MocapGE::D3DModel* ship_model,*cannon_1, *cannon_2;
-	MocapGE::SceneObject* scene_ship_, *scene_cannon1_, *scene_cannon2_;
+	MocapGE::D3DModel* ship_model,*cannon_1, *cannon_2, * bullet_1, *bullet_2;
+	MocapGE::SceneObject* scene_ship_, *scene_cannon1_, *scene_cannon2_, *scene_bullet1_, *scene_bullet2_;
 
 	MocapGE::D3DModel *pluto_, *jupiter_, *sun_;
 	MocapGE::SceneObject *scene_pluto_, *scene_jupiter_, *scene_sun_;
@@ -55,6 +55,7 @@ private:
 	bool spacekey_down_, wkey_down_, skey_down_;
 
 	MocapGE::Timer* timer_;
+	MocapGE::SpotLight* spot_light_;
 
 	bool first_person_;
 	MocapGE::float3 cam_pos_;

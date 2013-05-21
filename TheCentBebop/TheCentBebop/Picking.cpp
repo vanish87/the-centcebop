@@ -79,21 +79,21 @@ bool Picking::GetIntersection( D3DModel* model, Viewport* viewport, float2 scree
 		pos = pos / pos.w();
 		dir = Math::TransformNormal(dir, inv_model_mat_n);
 		dir = Math::Normalize(dir);
-		//generate a picking ray in view space
-		Ray* ray = new Ray(float3(pos.x(), pos.y(), pos.z()), dir);
+		//generate a picking ray in model space
+		Ray ray = Ray(float3(pos.x(), pos.y(), pos.z()), dir);
 		float t_min = std::numeric_limits<float>::max();
 		float t = 0;
 		float3 min_normal;
 		//if ray intersected with aabb, then calculate the accurate point
-		if(Math::IntersectRayAABB(ray, aabb))
+		if(Math::IntersectRayAABB(&ray, aabb))
 		{
-			PRINT("aabb picked");
+			//PRINT("aabb picked");
 			RenderLayout* rl = meshes_[i]->GetRenderLayout();
 			MocapGE::uint32_t* ib = meshes_[i]->GetIndex();
 			size_t i_size = rl->GetIndexCount();
 			for(size_t j =0; j < i_size -3; j+=3)
 	 		{
-				if(Math::IntersectRayTriangle(ray, vertice_cpu_[i][ib[j]]->position, vertice_cpu_[i][ib[j+1]]->position, vertice_cpu_[i][ib[j+2]]->position, t))
+				if(Math::IntersectRayTriangle(&ray, vertice_cpu_[i][ib[j]]->position, vertice_cpu_[i][ib[j+1]]->position, vertice_cpu_[i][ib[j+2]]->position, t))
 				{
 					if(t < t_min)
 					{
@@ -106,7 +106,7 @@ bool Picking::GetIntersection( D3DModel* model, Viewport* viewport, float2 scree
 			}
 			if(t_min < std::numeric_limits<float>::max())
 			{
-				intersected_point = ray->Origin()+ ray->Direction() * t_min;
+				intersected_point = ray.Origin()+ ray.Direction() * t_min;
 				float4x4 wm_mat = model_mat * world_matrix;
 				float4x4 wm_mat_n = Math::InverTranspose(wm_mat);
 				//make point to world space

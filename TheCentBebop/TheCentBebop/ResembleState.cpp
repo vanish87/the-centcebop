@@ -94,7 +94,7 @@ void ResembleState::OnMouseDown( WPARAM mouse_para, int x, int y )
 		picked_ = picking_[i]->GetIntersection(parts_[i]->GetModel(), viewport, screen_pos, picked_pos);
 		if(picked_)
 		{
-			PRINT("picked");
+			//PRINT("picked");
 			picked_model_ = parts_[i]->GetModel();
 			picked_index_= i;
 			break;
@@ -193,16 +193,16 @@ void ResembleState::OnMouseMove( WPARAM mouse_para, int x, int y )
 				else
 					if(delta.y() < 0 )
 						cannon_pos_ = cannon_pos_ + real_up/ 5;
-
+				
 				//make cannon move on the plane that parallel to the view plane
 				cannon_pos_ = cannon_pos_ + float3(delta.x()/320, delta.y()/200, 0) ;
 				Math::Translate(model_matrix, cannon_pos_.x(), cannon_pos_.y(), cannon_pos_.z());
-				picked_model_->SetModelMatrix(picked_model_->GetModelMatrix() *model_matrix);
+				//picked_model_->SetModelMatrix(picked_model_->GetModelMatrix() *model_matrix);
 
 				if (picked_index_ !=-1)
 				{
 					Cannon* cannon = parts_[picked_index_];
-					cannon->SetPos(cannon_pos_ - ship_pos_);
+					//cannon->SetPos(cannon_pos_ - ship_pos_);
 					//if picking a cannon then test if mouse pointing to the ship
 					//if YES, get the accurate point of ship and attach cannon on the surface of ship
 					if(ship_pick_->GetIntersection(ship_->GetModel(), viewport ,screen_pos, picked_pos, picked_normal))
@@ -226,13 +226,25 @@ void ResembleState::Attach( Ship* ship_, Cannon* picked_cannon ,float3 picked_po
 	float theta = Math::ArcCos(Math::Dot(picked_normal, cannon_up));
 
 	float3 ship_pos = ship_->GetPos();
-	picked_cannon->SetPos(picked_pos - ship_pos);
+	//std::cout<<picked_pos.x()<<"p "<<picked_pos.y()<<" "<<picked_pos.z()<<std::endl;
+	//std::cout<<ship_pos.x()<<"s "<<ship_pos.y()<<" "<<ship_pos.z()<<std::endl;
+
+
 	//get the rotation matrix so that we can make a fine attachment.
 	Math::RotationAxis(rot_matrix, axis, theta);
-	Math::Translate(world_matrix, picked_pos.x(), picked_pos.y(), picked_pos.z());
+	Math::Translate(world_matrix, picked_pos .x(), picked_pos.y(), picked_pos.z());
 	D3DModel* cannon_model = picked_cannon->GetModel();
 	cannon_model->SetModelMatrix(rot_matrix * world_matrix);
 
+	float4x4 model_mat = ship_->GetModel()->GetModelMatrix();
+	float4x4 inv_model_mat = Math::Inverse(model_mat);
+	float4x4 invtranp_model_mat = Math::InverTranspose(model_mat);
+	picked_pos = Math::Transform(picked_pos, inv_model_mat);
+	picked_normal = Math::TransformNormal(picked_normal, inv_model_mat);
+	picked_normal = Math::Normalize(picked_normal);
+	axis = Math::Cross(picked_normal, cannon_up);
+	theta = Math::ArcCos(Math::Dot(picked_normal, cannon_up));
+	picked_cannon->SetPos(picked_pos);
 	picked_cannon->SetRotation(axis, theta);
 
 	ship_->AddCannon(picked_cannon);
